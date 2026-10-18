@@ -378,7 +378,7 @@ export default function App() {
 
           <div className="mt-9 flex flex-wrap items-center gap-4">
             <GoldButton onClick={launchConfetti}>
-              Let the Party Begin <Sparkles size={16} />
+              Click here to Begin the Party <Sparkles size={16} />
             </GoldButton>
             <a
               href="#gallery"
@@ -626,12 +626,12 @@ export default function App() {
                 }
                 className="mt-5 text-xs font-semibold uppercase tracking-widest text-[#a78037] transition hover:text-[#72521f]"
               >
-                Another Wish ↗
+                Click for Wish ↗
               </button>
             </div>
 
             <GoldButton onClick={launchConfetti}>
-              Make Some Birthday Magic <Sparkles size={16} />
+              Click here to Make Some Birthday Magic <Sparkles size={16} />
             </GoldButton>
 
             <AnimatePresence>
