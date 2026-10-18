@@ -56,21 +56,21 @@ const memories = [
     title: "The Day You Became Famous",
     description:
       "তোমার confidence দেখে মনে হয় পৃথিবীর সব camera তোমার জন্যই বানানো।",
-    image: 0,
+    image: "/images/ramisa-5.jpg",
   },
   {
     number: "02",
     title: "Unlimited Gossip Subscription",
     description:
       "তোমার কাছে news channel-ও হার মানবে। Breaking news কখনো শেষ হয় না!",
-    image: 1,
+    image: "/images/ramisa-6.jpg",
   },
   {
     number: "03",
     title: "Officially Getting Older",
     description:
       "বয়স বাড়ছে ঠিকই, কিন্তু maturity এখনো delivery-তে আছে।",
-    image: 2,
+    image: "/images/ramisa-7.jpg",
   },
 ];
 
@@ -120,6 +120,42 @@ function GoldButton({ children, onClick, className = "" }) {
   );
 }
 
+function PhotoImage({ photo, alt, className = "", loading = "lazy" }) {
+  return (
+    <img
+      src={photo.src}
+      onError={(event) => {
+        if (event.currentTarget.dataset.fallbackUsed === "true") return;
+
+        event.currentTarget.dataset.fallbackUsed = "true";
+        event.currentTarget.src = photo.fallback;
+      }}
+      alt={alt}
+      loading={loading}
+      className={className}
+    />
+  );
+}
+
+function MemoryImage({ src, alt }) {
+  const [failed, setFailed] = useState(false);
+
+  const fallback =
+    "https://images.unsplash.com/photo-1517841905240-472988babdf9?w=900";
+
+  return (
+    <img
+      src={failed ? fallback : src}
+      onError={() => {
+        if (!failed) setFailed(true);
+      }}
+      alt={alt}
+      loading="lazy"
+      className="aspect-[16/10] w-full rounded-xl object-cover"
+    />
+  );
+}
+
 export default function App() {
   const audioRef = useRef(null);
 
@@ -129,7 +165,6 @@ export default function App() {
   const [surprised, setSurprised] = useState(false);
   const [wishIndex, setWishIndex] = useState(0);
 
-  // Start music after the visitor clicks a button.
   const startMusic = async () => {
     const audio = audioRef.current;
 
@@ -144,7 +179,6 @@ export default function App() {
     }
   };
 
-  // Play or pause music from the navbar.
   const toggleMusic = async () => {
     const audio = audioRef.current;
 
@@ -200,14 +234,13 @@ export default function App() {
         preload="auto"
         onPlay={() => setMusicOn(true)}
         onPause={() => setMusicOn(false)}
-        onEnded={() => setMusicOn(false)}
         onError={(event) => {
           console.error("Audio file error:", event.currentTarget.error);
           setMusicOn(false);
         }}
       />
 
-      {/* Welcome envelope */}
+      {/* Welcome */}
       <AnimatePresence>
         {!opened && (
           <motion.div
@@ -369,13 +402,10 @@ export default function App() {
             transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
             className="photo-shadow relative overflow-hidden rounded-t-[48%] rounded-b-3xl border-[7px] border-white bg-[#e9dfcc]"
           >
-            <img
-              src={photos[0].src}
-              onError={(event) => {
-                event.currentTarget.onerror = null;
-                event.currentTarget.src = photos[0].fallback;
-              }}
+            <PhotoImage
+              photo={photos[0]}
               alt="Ramisa birthday portrait"
+              loading="eager"
               className="aspect-[4/5] w-full object-cover"
             />
             <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/60 to-transparent p-7 pt-24 text-white">
@@ -442,14 +472,9 @@ export default function App() {
                 className="photo-shadow group w-full rounded-sm border border-[#e7ddc9] bg-white p-3 text-left"
               >
                 <div className="relative overflow-hidden bg-[#eee6d7]">
-                  <img
-                    src={photo.src}
-                    onError={(event) => {
-                      event.currentTarget.onerror = null;
-                      event.currentTarget.src = photo.fallback;
-                    }}
+                  <PhotoImage
+                    photo={photo}
                     alt={photo.caption}
-                    loading="lazy"
                     className="aspect-[4/5] w-full object-cover transition duration-700 group-hover:scale-110"
                   />
                   <div className="absolute inset-0 flex items-center justify-center bg-black/0 transition duration-300 group-hover:bg-black/25">
@@ -512,16 +537,9 @@ export default function App() {
                     </div>
 
                     <div className="photo-shadow overflow-hidden rounded-2xl border border-[#e7ddc9] bg-white p-2">
-                      <img
-                        src={photos[memory.image].src}
-                        onError={(event) => {
-                          event.currentTarget.onerror = null;
-                          event.currentTarget.src =
-                            photos[memory.image].fallback;
-                        }}
+                      <MemoryImage
+                        src={memory.image}
                         alt={memory.title}
-                        loading="lazy"
-                        className="aspect-[16/10] w-full rounded-xl object-cover"
                       />
                     </div>
 
@@ -544,7 +562,7 @@ export default function App() {
         </div>
       </section>
 
-      {/* Funny birthday wishes */}
+      {/* Birthday wishes */}
       <section
         id="wish"
         className="mx-auto max-w-5xl px-5 py-24 sm:px-8 sm:py-32"
@@ -695,12 +713,8 @@ export default function App() {
               onClick={(event) => event.stopPropagation()}
               className="max-h-[85vh] max-w-3xl text-center"
             >
-              <img
-                src={photos[selected].src}
-                onError={(event) => {
-                  event.currentTarget.onerror = null;
-                  event.currentTarget.src = photos[selected].fallback;
-                }}
+              <PhotoImage
+                photo={photos[selected]}
                 alt={photos[selected].caption}
                 className="mx-auto max-h-[70vh] max-w-full rounded-lg border-4 border-white/10 object-contain shadow-2xl"
               />
